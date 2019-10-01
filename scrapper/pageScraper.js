@@ -1,7 +1,8 @@
 const rp = require('request-promise');
 const $ = require('cheerio');
+const parser = require('../parser');
 
-const baseURL = 'http://www.pmfi.pr.gov.br/';
+const baseURL = 'http://www.pmfi.pr.gov.br';
 const url = 'http://www.pmfi.pr.gov.br/conteudo/?idMenu=570';
 
 rp(url)
@@ -20,8 +21,10 @@ rp(url)
     for (let index = 0; index < busPDFUrls.length; index++) {
       finalJSON.push({ name: titlePDF[index], link: busPDFUrls[index] });
     }
-    console.log(finalJSON);
+    // console.log(finalJSON);
+
+    parser.parsePDF(baseURL + '/ArquivosDB?idMidia=107021');
   })
   .catch(function(er) {
-    // handle error
+    console.log('error', er);
   });
