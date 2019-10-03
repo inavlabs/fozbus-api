@@ -1,33 +1,54 @@
 const rp = require('request-promise');
-const pdf = require('pdf-parse');
+const { PdfReader } = require('pdfreader');
+const timeRegex = /^\d\d:\d\d[\*]{0,1}$/;
 
-function render_page(pageData) {
-  //check documents https://mozilla.github.io/pdf.js/
-  let render_options = {
-    //replaces all occurrences of whitespace with standard spaces (0x20). The default value is `false`.
-    normalizeWhitespace: false,
-    //do not attempt to combine same line TextItem's. The default value is `false`.
-    disableCombineTextItems: false,
-  };
+function parseToJSON(buffer) {
+  const reader = new PdfReader();
 
-  return pageData.getTextContent(render_options).then(function(textContent) {
-    let lastY,
-      text = '';
-    for (let item of textContent.items) {
-      if (lastY == item.transform[5] || !lastY) {
-        text += item.str;
-      } else {
-        text += '\n' + item.str;
+  return new Promise((resolve, reject) => {
+    let pages = {};
+    let pageNumber = 1;
+    reader.parseBuffer(buffer, function(err, item) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else if (!item) {
+        /* pdfreader queues up the items in the PDF and passes them to
+         * the callback. When no item is passed, it's indicating that
+         * we're done reading the PDF. */
+        resolve(pages);
+      } else if (item.page) {
+        // Page items simply contain their page number.
+        pages[`page${pageNumber}`] = [];
+        pageNumber++;
+      } else if (item.text) {
+        const row = pages[`page${pageNumber - 1}`] || [];
+        row.push(item.text);
+        pages[`page${pageNumber - 1}`] = row;
       }
-      lastY = item.transform[5];
-    }
-    return text;
+    });
   });
 }
 
-let parseOptions = {
-  pagerender: render_page,
-};
+function extractBusScheduleTable(array, regex) {
+  const obj = { 0: [] };
+  array.forEach(item => {
+    if (regex.test(item)) {
+      if (obj[0].length === 0) {
+        obj[0].push(item);
+      }
+      if (
+        obj[0].every(
+          elem =>
+            parseInt(elem.replace(':', '')) !== parseInt(item.replace(':', ''))
+        )
+      ) {
+        obj[0].push(item);
+      }
+    }
+  });
+  return obj;
+}
 
 function parsePDF(url) {
   const options = {
@@ -38,24 +59,11 @@ function parsePDF(url) {
       'Content-type': 'application/pdf',
     },
   };
-  rp(options).then(function(buffer, data) {
-    // console.log(buffer);
-    pdf(buffer, parseOptions).then(function(data) {
-      // number of pages
-      // console.log(data.numpages);
-      // number of rendered pages
-      // console.log(data.numrender);
-      // PDF info
-      //   console.log(data.info);
-      // PDF metadata
-      // console.log(data.metadata);
-      // PDF.js version
-      // check https://mozilla.github.io/pdf.js/getting_started/
-      // console.log(data.version);
-      // PDF text
-      let rawTextArray = data.text.split('\n').filter(Boolean);
-      console.log(rawTextArray.map(str => str.trim()));
-    });
+  rp(options).then(async function(buffer, data) {
+    const jsonFile = await parseToJSON(buffer);
+
+    const obj = extractBusScheduleTable(jsonFile.page1, timeRegex);
+    console.log(obj);
   });
 }
 
