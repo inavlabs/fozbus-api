@@ -1,0 +1,71 @@
+{
+    "numero": 375,
+    "nome da linha": "cidade nova"
+    "dias": {
+        "segunda-sexta": {
+            "itinerarios": [
+                {
+                    "itinerario": "CENTRO",
+                    "horarios": [
+                        {"hora": "12:00", vias: "CENTRO", obs: ""},
+                        {"hora": "12:00", vias: "", obs: ""},
+                    ]
+                }
+            ],
+            "obs": "HORARIO VIGENTE...."
+        },
+        "sabado": {
+            "itinerarios": [
+                {
+                    "itinerario": "CENTRO",
+                    "horarios": [
+                        {"hora": "12:00", vias: "", obs: "cinza"},
+                        {"hora": "12:00", vias: "", obs: "cinza"},
+                    ]
+                }
+            ],
+            "obs": "HORARIO VIGENTE...."
+        },
+        "domingo": {
+            "itinerarios": [
+                {
+                    "itinerario": "CENTRO",
+                    "horarios": [
+                        {"hora": "12:00", vias: "", obs: ""},
+                        {"hora": "12:00", vias: "", obs: ""},
+                    ]
+                }
+            ],
+            "obs": [
+                "HORARIO VIGENTE...."
+            ]
+        },
+    },
+    "vias": [
+        {
+            via: "CENTRO", 
+            "descricao": "Rua antonio raposo, entre av brasil e benjamin constant"
+        }
+    ],
+    "observacoes do horario": [
+        {
+            "cor": "cinza",
+            "descricao": "VIAGENS DO BAIRRO A PARTIR DAS ..."
+        }
+    ],
+    "itinerarios": [
+        {
+            "titulo": "",
+            "ida": "",
+            "volta": ""
+        }
+    ],
+    "avisos gerais": [
+        "A extensao ao bairro....",
+        "A linha pode sofrer mudanças no itinerário para atender..."
+    ]
+}
+
+
+json
+json.nomedalinha.dias[segunda-sexta][0].itinerario
