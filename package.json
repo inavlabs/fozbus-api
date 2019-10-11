@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +19,13 @@
   },
   "homepage": "https://github.com/inavlabs/fozbus-api#readme",
   "dependencies": {
+    "apollo-server": "^2.9.6",
     "cheerio": "^1.0.0-rc.3",
     "pdfreader": "^1.0.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   }
 }

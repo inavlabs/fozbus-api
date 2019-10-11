@@ -1,8 +1,9 @@
 {
     "numero": 375,
     "nome da linha": "cidade nova"
-    "dias": {
-        "segunda-sexta": {
+    "dias": [
+        {
+            "dia": "segunda-sexta",
             "itinerarios": [
                 {
                     "itinerario": "CENTRO",
@@ -14,19 +15,21 @@
             ],
             "obs": "HORARIO VIGENTE...."
         },
-        "sabado": {
+        {
+            "dia":"sabado",
             "itinerarios": [
-                {
-                    "itinerario": "CENTRO",
-                    "horarios": [
-                        {"hora": "12:00", vias: "", obs: "cinza"},
-                        {"hora": "12:00", vias: "", obs: "cinza"},
-                    ]
-                }
+                    {
+                        "itinerario": "CENTRO",
+                        "horarios": [
+                            {"hora": "12:00", vias: "", obs: "cinza"},
+                            {"hora": "12:00", vias: "", obs: "cinza"},
+                        ]
+                    }
             ],
             "obs": "HORARIO VIGENTE...."
         },
-        "domingo": {
+        {
+            "dia":"domingo",
             "itinerarios": [
                 {
                     "itinerario": "CENTRO",
@@ -40,7 +43,7 @@
                 "HORARIO VIGENTE...."
             ]
         },
-    },
+    ],
     "vias": [
         {
             via: "CENTRO", 
@@ -53,7 +56,7 @@
             "descricao": "VIAGENS DO BAIRRO A PARTIR DAS ..."
         }
     ],
-    "itinerarios": [
+    "percurso": [
         {
             "titulo": "",
             "ida": "",
