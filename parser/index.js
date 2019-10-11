@@ -31,22 +31,60 @@ function parseToJSON(buffer) {
 }
 
 function extractBusScheduleTable(array, regex) {
-  const obj = { 0: [] };
+  let obj = { 0: [] };
+  let busLineSet = new Set();
+  let weekdaySet = new Set();
+  // console.log(array);
   array.forEach(item => {
+    const weekdayRegex = /SEGUNDA A SEXTA|SÁBADO|DOMINGO/;
+    if (weekdayRegex.test(item)) {
+      weekdaySet.add(item);
+    }
+
+    const busLineRegex = /^[A-Z]*$|>>/;
+    if (busLineRegex.test(item)) {
+      busLineSet.add(item);
+    }
+
     if (regex.test(item)) {
-      if (obj[0].length === 0) {
-        obj[0].push(item);
-      }
-      if (
-        obj[0].every(
-          elem =>
-            parseInt(elem.replace(':', '')) !== parseInt(item.replace(':', ''))
-        )
-      ) {
-        obj[0].push(item);
+      // Get the current quantity of tables
+      let arraysLength = Object.keys(obj).length;
+      for (let index = 0; index < arraysLength; index++) {
+        // Check if has already an array of schedules
+        if (obj[index].length === 0) {
+          obj[index].push(item);
+          break;
+        }
+        // Check if the time is already in the array
+        if (
+          obj[index].every(
+            elem =>
+              parseInt(elem.replace(':', '')) !==
+              parseInt(item.replace(':', ''))
+          )
+        ) {
+          obj[index].push(item);
+          break;
+        }
+        // If it is the last array, create a new one
+        if (index === arraysLength - 1) {
+          obj[arraysLength] = [];
+          obj[arraysLength].push(item);
+          break;
+        }
       }
     }
   });
+
+  // Object.keys(obj).map(key => {
+  //   obj[key].sort(
+  //     (a, b) => parseInt(a.replace(':', '')) - parseInt(b.replace(':', ''))
+  //   );
+  // });
+  console.log(weekdaySet);
+  console.log(busLineSet);
+  console.log(Object.keys(obj).length);
+  console.log(obj);
   return obj;
 }
 
@@ -63,7 +101,7 @@ function parsePDF(url) {
     const jsonFile = await parseToJSON(buffer);
 
     const obj = extractBusScheduleTable(jsonFile.page1, timeRegex);
-    console.log(obj);
+    // console.log(obj);
   });
 }
 
