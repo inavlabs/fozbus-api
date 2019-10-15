@@ -15,6 +15,12 @@ const LinhaSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ObservacaoHorario'
       }
+    ],
+    percursos: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Percurso'
+      }
     ]
   }
 );
