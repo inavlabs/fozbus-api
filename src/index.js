@@ -17,7 +17,8 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   context: {
-    Linha: Model.Linha
+    LinhaOnibus: Model.LinhaOnibus,
+    ObservacaoHorario: Model.ObservacaoHorario
   }
 });
 
