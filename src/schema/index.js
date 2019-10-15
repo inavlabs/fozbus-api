@@ -51,9 +51,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    addLinha(numero: Int!, nome: String!): LinhaOnibus
-    addObservacaoHorario(idLinha: ID!, cor: String!, descricao: String!): ObservacaoHorario
-    addPercurso(idLinha: ID!, titulo: String!, ida: String!, volta: String!): Percurso
+    addLinha(numero: Int!, nome: String!): LinhaOnibus!
+    addObservacaoHorario(idLinha: ID!, cor: String!, descricao: String!): ObservacaoHorario!
+    addPercurso(idLinha: ID!, titulo: String!, ida: String!, volta: String!): Percurso!
+    addAviso(idLinha: ID!, aviso: String!): String!
   }
 `;
 

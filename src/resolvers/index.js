@@ -40,7 +40,7 @@ module.exports = {
     },
 
     addPercurso: async (_, args, context) => {
-      const { idLinha, titulo, ida, volta } = args
+      const { idLinha, titulo, ida, volta } = args;
 
       const linha = await context.LinhaOnibus.findById(idLinha)
       if(linha) {
@@ -54,6 +54,18 @@ module.exports = {
         await linha.save();
 
         return percurso;
+      }
+    },
+
+    addAviso: async (_, args, context) => {
+      const { idLinha, aviso } = args;
+      
+      const linha = await context.LinhaOnibus.findById(idLinha)
+      if(linha) {
+        linha.avisos.push(aviso);
+        await linha.save();
+
+        return aviso;
       }
     }
   }
