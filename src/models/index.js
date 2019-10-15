@@ -1,5 +1,7 @@
-const Linha = require('./Linha');
+const LinhaOnibus = require('./LinhaOnibus');
+const ObservacaoHorario = require('./ObservacaoHorario');
 
 module.exports = {
-  Linha
+  LinhaOnibus,
+  ObservacaoHorario
 };

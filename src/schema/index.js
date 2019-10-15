@@ -26,6 +26,7 @@ const typeDefs = gql`
   type ObservacaoHorario {
     cor: String!
     descricao: String!
+    linha: ID
   }
 
   type Percurso {
@@ -51,6 +52,7 @@ const typeDefs = gql`
 
   type Mutation {
     addLinha(numero: Int!, nome: String!): LinhaOnibus
+    addObservacaoHorario(idLinha: ID!, cor: String!, descricao: String!): ObservacaoHorario
   }
 `;
 

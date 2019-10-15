@@ -10,8 +10,13 @@ const LinhaSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-
+    observacoesHorarios: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ObservacaoHorario'
+      }
+    ]
   }
 );
 
-module.exports = mongoose.model('Linha', LinhaSchema);
+module.exports = mongoose.model('LinhaOnibus', LinhaSchema);
