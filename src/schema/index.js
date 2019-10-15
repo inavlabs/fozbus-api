@@ -44,8 +44,13 @@ const typeDefs = gql`
     percursos: [Percurso]!
     avisos: [String]
   }
+
   type Query {
     getLinhas: [LinhaOnibus]!
+  }
+
+  type Mutation {
+    addLinha(numero: Int!, nome: String!): LinhaOnibus
   }
 `;
 
