@@ -26,7 +26,6 @@ const typeDefs = gql`
   type ObservacaoHorario {
     cor: String!
     descricao: String!
-    linha: ID
   }
 
   type Percurso {
@@ -40,7 +39,7 @@ const typeDefs = gql`
     numero: Int!
     nome: String!
     dias: [DiaSemana]!
-    vias: [Via]!
+    vias: [Via]
     observacoesHorarios: [ObservacaoHorario]!
     percursos: [Percurso]!
     avisos: [String]
@@ -55,6 +54,7 @@ const typeDefs = gql`
     addObservacaoHorario(idLinha: ID!, cor: String!, descricao: String!): ObservacaoHorario!
     addPercurso(idLinha: ID!, titulo: String!, ida: String!, volta: String!): Percurso!
     addAviso(idLinha: ID!, aviso: String!): String!
+    addVia(idLinha: ID!, nome: String!, descricao: String!): Via
   }
 `;
 
