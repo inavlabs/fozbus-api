@@ -102,7 +102,6 @@ module.exports = {
       const linha = await context.LinhaOnibus.findById(idLinha);
 
       if (linha) {
-        console.log(linha);
         const newItinerario = await new context.Itinerario({
           nome: itinerario,
         });
