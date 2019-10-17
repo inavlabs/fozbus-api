@@ -20,8 +20,11 @@ const server = new ApolloServer({
     LinhaOnibus: Model.LinhaOnibus,
     ObservacaoHorario: Model.ObservacaoHorario,
     Percurso: Model.Percurso,
-    Via: Model.Via
-  }
+    DiaSemana: Model.DiaSemana,
+    Horario: Model.Horario,
+    Itinerario: Model.Itinerario,
+    Via: Model.Via,
+  },
 });
 
 server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {

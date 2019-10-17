@@ -1,11 +1,20 @@
 module.exports = {
   Query: {
     getLinhas: async (_, args, context) => {
-      const list = await context.LinhaOnibus
-        .find({})
+      const list = await context.LinhaOnibus.find({})
         .populate('observacoesHorarios')
         .populate('percursos')
-        .populate('vias');
+        .populate('vias')
+        .populate({
+          path: 'dias',
+          populate: {
+            path: 'itinerarios',
+            populate: {
+              path: 'horarios',
+            },
+          },
+        });
+
       return list;
     },
   },
@@ -16,7 +25,7 @@ module.exports = {
 
       const model = await new context.LinhaOnibus({
         numero,
-        nome
+        nome,
       }).save();
 
       return model;
@@ -27,11 +36,13 @@ module.exports = {
 
       const linha = await context.LinhaOnibus.findById(idLinha);
       if (linha) {
-        const observacaoHorario = await new context.ObservacaoHorario({
-          cor, 
-          descricao,
-          linha: idLinha
-        }).save();
+        const observacaoHorario = await new context.ObservacaoHorario(
+          {
+            cor,
+            descricao,
+            linha: idLinha,
+          },
+        ).save();
 
         linha.observacoesHorarios.push(observacaoHorario);
         await linha.save();
@@ -43,15 +54,15 @@ module.exports = {
     addPercurso: async (_, args, context) => {
       const { idLinha, titulo, ida, volta } = args;
 
-      const linha = await context.LinhaOnibus.findById(idLinha)
-      if(linha) {
+      const linha = await context.LinhaOnibus.findById(idLinha);
+      if (linha) {
         const percurso = await new context.Percurso({
           titulo,
           ida,
-          volta
-        }).save()
+          volta,
+        }).save();
 
-        linha.percursos.push(percurso)
+        linha.percursos.push(percurso);
         await linha.save();
 
         return percurso;
@@ -60,25 +71,24 @@ module.exports = {
 
     addAviso: async (_, args, context) => {
       const { idLinha, aviso } = args;
-      
-      const linha = await context.LinhaOnibus.findById(idLinha)
-      if(linha) {
+
+      const linha = await context.LinhaOnibus.findById(idLinha);
+      if (linha) {
         linha.avisos.push(aviso);
         await linha.save();
 
         return aviso;
       }
     },
-
     addVia: async (_, args, context) => {
       const { idLinha, nome, descricao } = args;
 
       const linha = await context.LinhaOnibus.findById(idLinha);
       if (linha) {
         const via = await new context.Via({
-          nome, 
+          nome,
           descricao,
-          linha: idLinha
+          linha: idLinha,
         }).save();
 
         linha.vias.push(via);
@@ -87,5 +97,38 @@ module.exports = {
         return via;
       }
     },
-  }
+    addDiaHorarios: async (_, args, context) => {
+      const { idLinha, dia, itinerario, horarios, observacao } = args;
+      const linha = await context.LinhaOnibus.findById(idLinha);
+
+      if (linha) {
+        const newItinerario = await new context.Itinerario({
+          nome: itinerario,
+        });
+
+        horarios.forEach(async horario => {
+          const newHorario = await new context.Horario({
+            ...horario,
+          }).save();
+
+          newItinerario.horarios.push(newHorario);
+          await newItinerario.save();
+        });
+
+        const diaSemana = await new context.DiaSemana({
+          dia,
+          observacao,
+          linha: idLinha,
+        });
+
+        diaSemana.itinerarios.push(newItinerario);
+        await diaSemana.save();
+
+        linha.dias.push(diaSemana);
+        await linha.save();
+
+        return diaSemana;
+      }
+    },
+  },
 };
