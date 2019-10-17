@@ -19,7 +19,8 @@ const server = new ApolloServer({
   context: {
     LinhaOnibus: Model.LinhaOnibus,
     ObservacaoHorario: Model.ObservacaoHorario,
-    Percurso: Model.Percurso
+    Percurso: Model.Percurso,
+    Via: Model.Via
   }
 });
 

@@ -22,7 +22,13 @@ const LinhaSchema = new mongoose.Schema(
         ref: 'Percurso'
       }
     ],
-    avisos: [String]
+    avisos: [String],
+    vias: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Via'
+      }
+    ]
   }
 );
 

@@ -4,7 +4,8 @@ module.exports = {
       const list = await context.LinhaOnibus
         .find({})
         .populate('observacoesHorarios')
-        .populate('percursos');
+        .populate('percursos')
+        .populate('vias');
       return list;
     },
   },
@@ -67,6 +68,24 @@ module.exports = {
 
         return aviso;
       }
-    }
+    },
+
+    addVia: async (_, args, context) => {
+      const { idLinha, nome, descricao } = args;
+
+      const linha = await context.LinhaOnibus.findById(idLinha);
+      if (linha) {
+        const via = await new context.Via({
+          nome, 
+          descricao,
+          linha: idLinha
+        }).save();
+
+        linha.vias.push(via);
+        await linha.save();
+
+        return via;
+      }
+    },
   }
 };
