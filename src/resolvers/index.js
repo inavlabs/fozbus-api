@@ -99,27 +99,39 @@ module.exports = {
     },
     addDiaHorarios: async (_, args, context) => {
       const { idLinha, dia, itinerario, horarios, observacao } = args;
-      const linha = await context.LinhaOnibus.findById(idLinha);
+      const linha = await context.LinhaOnibus.findById(
+        idLinha,
+      ).populate({
+        path: 'dias',
+        populate: {
+          path: 'itinerarios',
+          populate: {
+            path: 'horarios',
+          },
+        },
+      });
 
       if (linha) {
-        const newItinerario = await new context.Itinerario({
+        const newItinerario = new context.Itinerario({
           nome: itinerario,
+          horarios: [],
         });
 
-        horarios.forEach(async horario => {
-          const newHorario = await new context.Horario({
-            ...horario,
+        for (let index = 0; index < horarios.length; index++) {
+          let horario = await new context.Horario({
+            ...horarios[index],
+            itinerario: newItinerario,
           }).save();
+          newItinerario.horarios.push(horario);
+        }
 
-          newItinerario.horarios.push(newHorario);
-          await newItinerario.save();
-        });
+        await newItinerario.save();
 
         const diaSemana = await new context.DiaSemana({
           dia,
           observacao,
           linha: idLinha,
-        });
+        }).save();
 
         diaSemana.itinerarios.push(newItinerario);
         await diaSemana.save();
