@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const DiaSemanaSchema = new mongoose.Schema({
-  dia: [{
-    type: Number,
-    required: true,
-  }],
+  dia: [
+    {
+      type: Number,
+      required: true,
+    },
+  ],
   observacao: {
     type: String,
   },
