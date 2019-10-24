@@ -127,8 +127,13 @@ module.exports = {
 
         await newItinerario.save();
 
+        const diasDaSemana = [...new Set(dia)];
+        if (diasDaSemana.filter(u => u < 0 || u > 7).length) {
+          throw new Error('Dias da semana is out of range.');
+        }
+
         const diaSemana = await new context.DiaSemana({
-          dia,
+          dia: diasDaSemana,
           observacao,
           linha: idLinha,
         }).save();

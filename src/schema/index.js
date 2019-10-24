@@ -21,7 +21,7 @@ const typeDefs = gql`
   }
 
   type DiaSemana {
-    dia: String!
+    dia: [Int!]!
     itinerarios: [Itinerario]!
     observacao: String
     linha: ID
@@ -75,7 +75,7 @@ const typeDefs = gql`
     addVia(idLinha: ID!, nome: String!, descricao: String!): Via
     addDiaHorarios(
       idLinha: ID!
-      dia: String!
+      dia: [Int!]!
       itinerario: String!
       horarios: [HorarioInput]!
       observacao: String
