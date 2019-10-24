@@ -1,3 +1,6 @@
+const INITIAL_WEEKDAY = 0;
+const FINAL_WEEKDAY = 7;
+
 module.exports = {
   Query: {
     getLinhas: async (_, args, context) => {
@@ -127,8 +130,13 @@ module.exports = {
 
         await newItinerario.save();
 
+        const diasDaSemana = [...new Set(dia)];
+        if (diasDaSemana.filter(u => u < INITIAL_WEEKDAY || u > FINAL_WEEKDAY).length) {
+          throw new Error('Dias da semana is out of range.');
+        }
+
         const diaSemana = await new context.DiaSemana({
-          dia,
+          dia: diasDaSemana,
           observacao,
           linha: idLinha,
         }).save();
