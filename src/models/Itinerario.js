@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const ItinerarioSchema = new mongoose.Schema({
-  nome: {
+  origem: {
+    type: String,
+    required: true,
+  },
+  destino: {
     type: String,
     required: true,
   },

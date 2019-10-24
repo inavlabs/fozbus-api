@@ -101,7 +101,14 @@ module.exports = {
       }
     },
     addDiaHorarios: async (_, args, context) => {
-      const { idLinha, dia, itinerario, horarios, observacao } = args;
+      const {
+        idLinha,
+        dia,
+        origem,
+        destino,
+        horarios,
+        observacao,
+      } = args;
       const linha = await context.LinhaOnibus.findById(
         idLinha,
       ).populate({
@@ -116,7 +123,8 @@ module.exports = {
 
       if (linha) {
         const newItinerario = new context.Itinerario({
-          nome: itinerario,
+          origem,
+          destino,
           horarios: [],
         });
 
@@ -131,7 +139,11 @@ module.exports = {
         await newItinerario.save();
 
         const diasDaSemana = [...new Set(dia)];
-        if (diasDaSemana.filter(u => u < INITIAL_WEEKDAY || u > FINAL_WEEKDAY).length) {
+        if (
+          diasDaSemana.filter(
+            u => u < INITIAL_WEEKDAY || u > FINAL_WEEKDAY,
+          ).length
+        ) {
           throw new Error('Dias da semana is out of range.');
         }
 
