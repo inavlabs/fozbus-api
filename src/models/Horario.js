@@ -11,12 +11,10 @@ const HorarioSchema = new mongoose.Schema({
   observacao: {
     type: String,
   },
-  itinerario: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Itinerario',
-    },
-  ],
+  itinerario: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Itinerario',
+  },
 });
 
 module.exports = mongoose.model('Horario', HorarioSchema);

@@ -11,10 +11,11 @@ const typeDefs = gql`
     hora: String!
     via: String
     observacao: String
-    itinerario: ID
+    itinerario: ID!
   }
 
   type Itinerario {
+    id: ID!
     origem: String!
     destino: String!
     horarios: [Horario]!
@@ -82,6 +83,12 @@ const typeDefs = gql`
       horarios: [HorarioInput]!
       observacao: String
     ): DiaSemana
+    updateItinerario(
+      idItinerario: ID!
+      origem: String
+      destino: String
+      horarios: [HorarioInput]!
+    ): Itinerario
   }
 `;
 

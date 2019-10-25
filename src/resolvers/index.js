@@ -128,14 +128,18 @@ module.exports = {
           horarios: [],
         });
 
-        for (let index = 0; index < horarios.length; index++) {
-          let horario = await new context.Horario({
-            ...horarios[index],
+        let horariosItinerarioArray = horarios.map(horario => {
+          return {
+            ...horario,
             itinerario: newItinerario,
-          }).save();
-          newItinerario.horarios.push(horario);
-        }
+          };
+        });
 
+        let horariosObjectArray = await context.Horario.create(
+          horariosItinerarioArray,
+        );
+
+        newItinerario.horarios = horariosObjectArray;
         await newItinerario.save();
 
         const diasDaSemana = [...new Set(dia)];
@@ -161,6 +165,43 @@ module.exports = {
 
         return diaSemana;
       }
+    },
+
+    updateItinerario: async (_, args, context) => {
+      const { idItinerario, origem, destino, horarios } = args;
+
+      const itinerario = await context.Itinerario.findById(
+        idItinerario,
+      );
+      if (!itinerario) {
+        throw new Error('No itinerário');
+      }
+      if (origem) {
+        itinerario.origem = origem;
+      }
+      if (destino) {
+        itinerario.destino = destino;
+      }
+
+      await context.Horario.deleteMany({
+        _id: { $in: itinerario.horarios },
+      });
+
+      let horariosItinerarioArray = horarios.map(horario => {
+        return {
+          ...horario,
+          itinerario: itinerario._id,
+        };
+      });
+
+      let horariosObjectArray = await context.Horario.create(
+        horariosItinerarioArray,
+      );
+
+      itinerario.horarios = horariosObjectArray;
+
+      await itinerario.save();
+      return itinerario;
     },
   },
 };
