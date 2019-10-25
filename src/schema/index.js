@@ -11,7 +11,7 @@ const typeDefs = gql`
     hora: String!
     via: String
     observacao: String
-    itinerario: ID
+    itinerario: ID!
   }
 
   type Itinerario {

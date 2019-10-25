@@ -128,14 +128,18 @@ module.exports = {
           horarios: [],
         });
 
-        for (let index = 0; index < horarios.length; index++) {
-          let horario = await new context.Horario({
-            ...horarios[index],
+        let horariosItinerarioArray = horarios.map(horario => {
+          return {
+            ...horario,
             itinerario: newItinerario,
-          }).save();
-          newItinerario.horarios.push(horario);
-        }
+          };
+        });
 
+        let horariosObjectArray = await context.Horario.create(
+          horariosItinerarioArray,
+        );
+
+        newItinerario.horarios = horariosObjectArray;
         await newItinerario.save();
 
         const diasDaSemana = [...new Set(dia)];
@@ -183,13 +187,18 @@ module.exports = {
         _id: { $in: itinerario.horarios },
       });
 
-      for (let index = 0; index < horarios.length; index++) {
-        let horario = await new context.Horario({
-          ...horarios[index],
-          itinerario: itinerario,
-        }).save();
-        itinerario.horarios.push(horario);
-      }
+      let horariosItinerarioArray = horarios.map(horario => {
+        return {
+          ...horario,
+          itinerario: itinerario._id,
+        };
+      });
+
+      let horariosObjectArray = await context.Horario.create(
+        horariosItinerarioArray,
+      );
+
+      itinerario.horarios = horariosObjectArray;
 
       await itinerario.save();
       return itinerario;
