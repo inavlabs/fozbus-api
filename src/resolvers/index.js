@@ -162,5 +162,37 @@ module.exports = {
         return diaSemana;
       }
     },
+
+    updateItinerario: async (_, args, context) => {
+      const { idItinerario, origem, destino, horarios } = args;
+
+      const itinerario = await context.Itinerario.findById(
+        idItinerario,
+      );
+      if (!itinerario) {
+        throw new Error('No itinerário');
+      }
+      if (origem) {
+        itinerario.origem = origem;
+      }
+      if (destino) {
+        itinerario.destino = destino;
+      }
+
+      await context.Horario.deleteMany({
+        _id: { $in: itinerario.horarios },
+      });
+
+      for (let index = 0; index < horarios.length; index++) {
+        let horario = await new context.Horario({
+          ...horarios[index],
+          itinerario: itinerario,
+        }).save();
+        itinerario.horarios.push(horario);
+      }
+
+      await itinerario.save();
+      return itinerario;
+    },
   },
 };
