@@ -4,7 +4,7 @@ const FINAL_WEEKDAY = 7;
 module.exports = {
   Query: {
     getLinhas: async (_, args, context) => {
-      const list = await context.LinhaOnibus.find({})
+      const list = await context.models.LinhaOnibus.find({})
         .populate('observacoesHorarios')
         .populate('percursos')
         .populate('vias')
@@ -26,7 +26,7 @@ module.exports = {
     addLinha: async (_, args, context) => {
       const { numero, nome } = args;
 
-      const model = await new context.LinhaOnibus({
+      const model = await new context.models.LinhaOnibus({
         numero,
         nome,
       }).save();
@@ -37,9 +37,11 @@ module.exports = {
     addObservacaoHorario: async (_, args, context) => {
       const { idLinha, cor, descricao } = args;
 
-      const linha = await context.LinhaOnibus.findById(idLinha);
+      const linha = await context.models.LinhaOnibus.findById(
+        idLinha,
+      );
       if (linha) {
-        const observacaoHorario = await new context.ObservacaoHorario(
+        const observacaoHorario = await new context.models.ObservacaoHorario(
           {
             cor,
             descricao,
@@ -57,9 +59,11 @@ module.exports = {
     addPercurso: async (_, args, context) => {
       const { idLinha, titulo, ida, volta } = args;
 
-      const linha = await context.LinhaOnibus.findById(idLinha);
+      const linha = await context.models.LinhaOnibus.findById(
+        idLinha,
+      );
       if (linha) {
-        const percurso = await new context.Percurso({
+        const percurso = await new context.models.Percurso({
           titulo,
           ida,
           volta,
@@ -75,7 +79,9 @@ module.exports = {
     addAviso: async (_, args, context) => {
       const { idLinha, aviso } = args;
 
-      const linha = await context.LinhaOnibus.findById(idLinha);
+      const linha = await context.models.LinhaOnibus.findById(
+        idLinha,
+      );
       if (linha) {
         linha.avisos.push(aviso);
         await linha.save();
@@ -86,9 +92,11 @@ module.exports = {
     addVia: async (_, args, context) => {
       const { idLinha, nome, descricao } = args;
 
-      const linha = await context.LinhaOnibus.findById(idLinha);
+      const linha = await context.models.LinhaOnibus.findById(
+        idLinha,
+      );
       if (linha) {
-        const via = await new context.Via({
+        const via = await new context.models.Via({
           nome,
           descricao,
           linha: idLinha,
@@ -109,7 +117,7 @@ module.exports = {
         horarios,
         observacao,
       } = args;
-      const linha = await context.LinhaOnibus.findById(
+      const linha = await context.models.LinhaOnibus.findById(
         idLinha,
       ).populate({
         path: 'dias',
@@ -122,7 +130,7 @@ module.exports = {
       });
 
       if (linha) {
-        const newItinerario = new context.Itinerario({
+        const newItinerario = new context.models.Itinerario({
           origem,
           destino,
           horarios: [],
@@ -135,7 +143,7 @@ module.exports = {
           };
         });
 
-        let horariosObjectArray = await context.Horario.create(
+        let horariosObjectArray = await context.models.Horario.create(
           horariosItinerarioArray,
         );
 
@@ -151,7 +159,7 @@ module.exports = {
           throw new Error('Dias da semana is out of range.');
         }
 
-        const diaSemana = await new context.DiaSemana({
+        const diaSemana = await new context.models.DiaSemana({
           dia: diasDaSemana,
           observacao,
           linha: idLinha,
@@ -170,7 +178,7 @@ module.exports = {
     updateItinerario: async (_, args, context) => {
       const { idItinerario, origem, destino, horarios } = args;
 
-      const itinerario = await context.Itinerario.findById(
+      const itinerario = await context.models.Itinerario.findById(
         idItinerario,
       );
       if (!itinerario) {
@@ -183,7 +191,7 @@ module.exports = {
         itinerario.destino = destino;
       }
 
-      await context.Horario.deleteMany({
+      await context.models.Horario.deleteMany({
         _id: { $in: itinerario.horarios },
       });
 
@@ -194,7 +202,7 @@ module.exports = {
         };
       });
 
-      let horariosObjectArray = await context.Horario.create(
+      let horariosObjectArray = await context.models.Horario.create(
         horariosItinerarioArray,
       );
 

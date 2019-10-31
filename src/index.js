@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
-const Model = require('./models');
+const authMiddleware = require('./auth');
 
 require('dotenv').config();
 
@@ -16,15 +16,7 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
-  context: {
-    LinhaOnibus: Model.LinhaOnibus,
-    ObservacaoHorario: Model.ObservacaoHorario,
-    Percurso: Model.Percurso,
-    DiaSemana: Model.DiaSemana,
-    Horario: Model.Horario,
-    Itinerario: Model.Itinerario,
-    Via: Model.Via,
-  },
+  context: authMiddleware,
 });
 
 server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
