@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/inavlabs/fozbus-api#readme",
   "dependencies": {
-    "apollo-server": "^2.9.6",
+    "apollo-server": "^2.25.4",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.1.0",
     "mongoose": "^5.7.5",
